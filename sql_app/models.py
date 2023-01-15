@@ -1,24 +1,14 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Enum
 from sqlalchemy.orm import relationship
-from enum import Enum
 from datetime import datetime
 
 from .database import Base
 
-class TypeCours(Enum):
-    COURS = "cours"
-    TD = "td"
-    TP = "tp"
-
-class Niveau(Enum):
-    L = "l"
-    M = "m"
-    D = "d"
 
 class User(Base):
     __tablename__ = "utilisateur"
     id_utilisateur = Column(Integer, primary_key=True, index=True)
-    role = Column(String, ForeignKey="role")
+    role = Column(Integer, ForeignKey("role.id_role"))
     nom = Column(String)
     prenom = Column(String)
     email = Column(String)
@@ -31,7 +21,7 @@ class Cours(Base):
     __tablename__ = "cours"
     id_cours = Column(Integer, primary_key=True, index=True)
     id_enseignant = Column(Integer, ForeignKey("enseignant.id_enseignant"))
-    type_cours = Column(TypeCours)
+    type_cours = Column(Enum("td", "tp", "cours", name="cours_enum"))
 
 class Edt(Base):
     __tablename__ = "edt"
@@ -58,7 +48,7 @@ class Filiere(Base):
     id_responsable = Column(Integer, ForeignKey("enseignant.id_utilisateur"))
     nom = Column(String)
     description = Column(String)
-    niveau = Column(Niveau)
+    niveau = Column(Enum("L", "M", "D", name="niveau_enum"))
     nombre_anne = Column(Integer)
     date_debut= Column(DateTime, default=datetime.utcnow)
     date_fin = Column(DateTime, default=datetime.utcnow)
