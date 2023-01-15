@@ -10,10 +10,15 @@ class TypeCours(Enum):
     TD = "td"
     TP = "tp"
 
+class Niveau(Enum):
+    L = "l"
+    M = "m"
+    D = "d"
+
 class User(Base):
     __tablename__ = "utilisateur"
     id_utilisateur = Column(Integer, primary_key=True, index=True)
-    # role = Column(String, ForeignKey="role")
+    role = Column(String, ForeignKey="role")
     nom = Column(String)
     prenom = Column(String)
     email = Column(String)
@@ -22,108 +27,71 @@ class User(Base):
     mail_univ = Column(String)
     tel = Column(Integer)
 
-# class Cours(Base):
-#     __tablename__ = "edt"
+class Cours(Base):
+    __tablename__ = "cours"
+    id_cours = Column(Integer, primary_key=True, index=True)
+    id_enseignant = Column(Integer, ForeignKey("enseignant.id_enseignant"))
+    type_cours = Column(TypeCours)
 
-#     id_edt = Column(Integer, primary_key=True, index=True)
-#     id_cours = Column(Integer, ForeignKey("cours.id_cours"))
-#     date_debut= Column(DateTime, default=datetime.utcnow)
-#     date_fin = Column(DateTime, default=datetime.utcnow)
+class Edt(Base):
+    __tablename__ = "edt"
+    id_edt = Column(Integer, primary_key=True, index=True)
+    id_cours = Column(Integer, ForeignKey("cours.id_cours"))
+    date_debut= Column(DateTime, default=datetime.utcnow)
+    date_fin = Column(DateTime, default=datetime.utcnow)
 
-# class User(Base):
-#     __tablename__ = "users"
+class Enseignant(Base):
+    __tablename__ = "enseignant"
+    id_utilisateur = Column(Integer, primary_key=True, index=True)
+    responsabilite_ens = Column(String)
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     hashed_password = Column(String)
-#     is_active = Column(Boolean, default=True)
+class Etudiant(Base):
+    __tablename__ = "etudiant"
+    id_utilisateur = Column(Integer, primary_key=True, index=True)
+    diplome_etu = Column(String)
+    diplome_etu = Column(String)
+    id_filiere = Column(Integer, ForeignKey("filiere.id_filiere"))
 
-#     items = relationship("Item", back_populates="owner")
+class Filiere(Base):
+    __tablename__ = "filiere"
+    id_filiere = Column(Integer, primary_key=True, index=True)
+    id_responsable = Column(Integer, ForeignKey("enseignant.id_utilisateur"))
+    nom = Column(String)
+    description = Column(String)
+    niveau = Column(Niveau)
+    nombre_anne = Column(Integer)
+    date_debut= Column(DateTime, default=datetime.utcnow)
+    date_fin = Column(DateTime, default=datetime.utcnow)
 
+class Horaire_enseignant(Base):
+    __tablename__ = "horaire_enseignant"
+    id_tache = Column(Integer, primary_key=True, index=True)
+    id_utilisateur = Column(Integer, ForeignKey("enseignant.id_utilisateur"))
+    nom_tache= Column(String)
+    heure_tache = Column(Integer)
 
-# class Item(Base):
-#     __tablename__ = "items"
+class Matiere(Base):
+    __tablename__ = "matiere"
+    id_matiere = Column(Integer, primary_key=True, index=True)
+    libele_matiere = Column(String)
+    description_matiere = Column(String)
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String, index=True)
-#     description = Column(String, index=True)
-#     owner_id = Column(Integer, ForeignKey("users.id"))
+class Notes(Base):
+    __tablename__ = "notes"
+    id_notes = Column(Integer, primary_key=True, index=True)
+    id_utilisateur = Column(Integer, ForeignKey("enseignant.id_utilisateur"))
+    id_cours = Column(Integer, ForeignKey("cours.id_cours"))
+    note = Column(Integer)
 
-#     owner = relationship("User", back_populates="items")
+class Role(Base):
+    __tablename__ = "role"
+    id_role = Column(Integer, primary_key=True, index=True)
+    nom = Column(String)
 
-
-# class User(Base):
-#     __tablename__ = "users"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     hashed_password = Column(String)
-#     is_active = Column(Boolean, default=True)
-
-#     items = relationship("Item", back_populates="owner")
-
-
-# class Item(Base):
-#     __tablename__ = "items"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String, index=True)
-#     description = Column(String, index=True)
-#     owner_id = Column(Integer, ForeignKey("users.id"))
-
-#     owner = relationship("User", back_populates="items")
-
-
-# class User(Base):
-#     __tablename__ = "users"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     hashed_password = Column(String)
-#     is_active = Column(Boolean, default=True)
-
-#     items = relationship("Item", back_populates="owner")
-
-
-# class Item(Base):
-#     __tablename__ = "items"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String, index=True)
-#     description = Column(String, index=True)
-#     owner_id = Column(Integer, ForeignKey("users.id"))
-
-#     owner = relationship("User", back_populates="items")
-
-
-# class User(Base):
-#     __tablename__ = "users"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     hashed_password = Column(String)
-#     is_active = Column(Boolean, default=True)
-
-#     items = relationship("Item", back_populates="owner")
-
-
-# class Item(Base):
-#     __tablename__ = "items"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String, index=True)
-#     description = Column(String, index=True)
-#     owner_id = Column(Integer, ForeignKey("users.id"))
-
-#     owner = relationship("User", back_populates="items")
-
-
-# class User(Base):
-#     __tablename__ = "users"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     hashed_password = Column(String)
-#     is_active = Column(Boolean, default=True)
-
-#     items = relationship("Item", back_populates="owner")
+class Ue(Base):
+    __tablename__ = "ue"
+    id_ue = Column(Integer, primary_key=True, index=True)
+    id_cours = Column(Integer, ForeignKey("cours.id_cours"))
+    libele_ue = Column(String)
+    description_ue = Column(String)
+    status = Column(String)
