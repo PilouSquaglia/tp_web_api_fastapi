@@ -38,6 +38,7 @@ class Enseignant(Base):
 class Etudiant(Base):
     __tablename__ = "etudiant"
     id_utilisateur = Column(Integer, primary_key=True, index=True)
+    numero_etu = Column(String)
     diplome_etu = Column(String)
     diplome_etu = Column(String)
     id_filiere = Column(Integer, ForeignKey("filiere.id_filiere"))
