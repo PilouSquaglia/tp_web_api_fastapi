@@ -15,7 +15,6 @@ from faker import Faker
 
 app = FastAPI()
 
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -63,12 +62,13 @@ def affich_notes_etudiant(numero_etu: str, db: Session = Depends(get_db)):
     # res = db.execute(query)
     return res[0]
 
-@app.get("/edt/{numero_filiere}")
-def affich_edt_filiere(numero_filiere: str, db: Session = Depends(get_db)):
+@app.get("/edt/{id_filiere}")
+def affich_edt_filiere(id_filiere: str, db: Session = Depends(get_db)):
     res = (db.query(Edt)
           .join(Cours, Edt.id_cours == Cours.id_cours)
-          .join(Filiere, Cours.id)
-          .filter(Filiere.numero_filiere == numero_filiere)
+          .join(Enseignant , Cours.id_enseignant == Enseignant.id_utilisateur)
+          .join(Filiere, Enseignant.id_utilisateur == Filiere.id_responsable)
+          .filter(Filiere.id_filiere == id_filiere)
           .all())
-    return [dict(row) for row in res]
+    return res
 
