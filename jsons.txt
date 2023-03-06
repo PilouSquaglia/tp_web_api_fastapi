@@ -1,0 +1,18 @@
+{
+   "id_utilisateur": 2,
+		"nom":"Pilou",
+		"prenom": "Squaglia",
+		"email": "pl.squaglia@gmail.com",
+		"password":"test",
+		"status": "etudiant",
+		"mail_univ":"20190821@webmail.universita.corsica",
+		"tel": "0611111111",
+		"role": 1
+}
+
+{
+   "id_utilisateur": 2,
+		"id_notes": 2,
+		"id_cours": 1,
+		"note": 17
+}

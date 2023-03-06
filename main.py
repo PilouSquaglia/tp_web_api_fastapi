@@ -6,6 +6,7 @@ from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.responses import FileResponse
 from sql_app.models import *
 from sql_app.database import *
+from users import *
 from sqlalchemy.orm import Session
 from faker import Faker
 
@@ -33,6 +34,7 @@ def returnEtudiants(db: Session = Depends(get_db)):
           .all())
     return res[0]
 
+
 @app.post("/users/")
 async def create_user(request: Request):
     data = await request.json()
@@ -41,7 +43,17 @@ async def create_user(request: Request):
     session.add(user)
     session.commit()
     session.close()
-    return {"message": "User added to the database"}
+    return {"message": "User ajouté à la base de données"}
+
+@app.post("/notes/")
+async def create_notes(request: Request):
+    data = await request.json()
+    session = Session(bind=engine)
+    notes = Notes(**data)
+    session.add(notes)
+    session.commit()
+    session.close()
+    return {"message": "Notes ajouté à la base de données"}
 
 @app.get("/filieres/")
 def returnFilieres(db: Session = Depends(get_db)):
